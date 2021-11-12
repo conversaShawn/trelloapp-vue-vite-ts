@@ -8,10 +8,6 @@
     "selectorcheck": "./scripts/getSelectors.sh"
   },
   "dependencies": {
-    "@4tw/cypress-drag-drop": "^2.1.0",
-    "@cypress/code-coverage": "^3.9.11",
-    "@cypress/vite-dev-server": "^2.2.1",
-    "@cypress/vue": "^3.0.5",
     "@popperjs/core": "^2.9.3",
     "@tailwindcss/jit": "^0.1.18",
     "@typescript-eslint/eslint-plugin": "^4.23.0",
@@ -25,8 +21,6 @@
     "axios": "^0.21.1",
     "concurrently": "^6.0.0",
     "connect-busboy": "^0.0.2",
-    "cypress-file-upload": "^5.0.8",
-    "cypress-real-events": "^1.5.1",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.23.2",
     "eslint-plugin-node": "^11.1.0",
@@ -61,12 +55,8 @@
     "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
-    "cypress": "^9.1.0",
-    "cypress-esbuild-preprocessor": "^1.0.2",
     "esbuild": "^0.13.11",
     "eslint": "^7.32.0",
-    "eslint-plugin-cypress": "^2.12.1",
-    "eslint-plugin-no-only-tests": "^2.6.0",
     "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
     "eslint-plugin-sort-keys-fix": "^1.1.2"
   }
