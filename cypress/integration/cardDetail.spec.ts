@@ -30,9 +30,7 @@ it('card detail actions', () => {
   cy.step('card rename')
   cy.getDataCy('card-detail-title').click();
   cy.getDataCy('card-detail-title').type('new name{enter}');
-  cy.wait('@updateCard')
-    .its('request.body.name')
-    .should('eq', 'new name');
+  cy.wait('@updateCard').its('request.body.name').should('eq', 'new name');
   cy.getDataCy('card-detail-title').should('have.value', 'new name');
   cy.getDataCy('card-detail-title').type('{esc}');
   cy.getDataCy('card-detail-title').should('have.value', 'new name');
@@ -40,14 +38,13 @@ it('card detail actions', () => {
     .should('exist')
     .and('contain.text', 'Card was renamed');
 
-  cy.step('card deadline')
-  // dropdown
+  cy.step('card deadline hide')
   cy.getDataCy('calendar-dropdown').click();
   cy.getDataCy('card-detail-deadline').should('be.visible');
-  // dropdown hides
   cy.getDataCy('calendar-dropdown').click();
   cy.getDataCy('card-detail-deadline').should('not.exist');
-  // calendar buton on side
+  
+  cy.step('card deadline hide')
   cy.getDataCy('calendar-button').click();
   cy.getDataCy('card-detail-deadline').should('be.visible');
   cy.get('.vc-title').click();
@@ -62,7 +59,8 @@ it('card detail actions', () => {
   cy.step('card description')
   cy.getDataCy('card-description').type('new description{enter}');
   // cy.wait('@updateCard').its('request.body').should('have.property', 'description', 'new description');
-
+  
+  cy.step('image upload')
   cy.intercept({
     method: 'POST',
     url: '/api/upload',
@@ -70,24 +68,16 @@ it('card detail actions', () => {
   }).as('imageUpload');
   cy.intercept('PATCH', '/api/cards/*').as('updateCard');
   cy.getDataCy('upload-image').attachFile('cypressLogo.png', { subjectType: 'drag-n-drop' });
-  cy.wait('@imageUpload')
-    .its('response.body')
-    .should('have.property', 'path')
-    .and('not.be.empty');
-  cy.wait('@updateCard')
-    .its('response.body.image')
-    .should('not.be.empty');
+  cy.wait('@imageUpload').its('response.body').should('have.property', 'path').and('not.be.empty');
+  cy.wait('@updateCard').its('response.body.image').should('not.be.empty');
   cy.getDataCy('image-attachment').should('exist');
-  cy.getDataCy('notification-message')
-    .should('exist')
-    .and('contain.text', 'File was sucessfully uploaded');
+  cy.getDataCy('notification-message').should('exist').and('contain.text', 'File was sucessfully uploaded');
   cy.getDataCy('image-delete').click();
-  cy.wait('@updateCard')
-    .its('response.body.image')
-    .should('be.null');
+  cy.wait('@updateCard').its('response.body.image').should('be.null');
   cy.getDataCy('image-attachment').should('not.exist');
   cy.getDataCy('upload-image').should('be.visible');
 
+  cy.step('error when upload does not work')
   cy.intercept({
     method: 'POST',
     url: '/api/upload'
@@ -95,17 +85,12 @@ it('card detail actions', () => {
     statusCode: 400
   }).as('imageUpload');
   cy.getDataCy('upload-image').attachFile('cypressLogo.png', { subjectType: 'drag-n-drop' });
-  cy.getDataCy('notification-message')
-    .should('exist')
-    .and('contain.text', 'There was an error uploading file');
+  cy.getDataCy('notification-message').should('exist').and('contain.text', 'There was an error uploading file');
 
   cy.step('delete a card')
   cy.getDataCy('card-detail-delete').click();
-  cy.wait('@deleteCard')
-    .its('response.statusCode')
-    .should('eq', 200);
+  cy.wait('@deleteCard').its('response.statusCode').should('eq', 200);
   cy.getDataCy('card-detail').should('not.exist');
-  cy.getDataCy('notification-message')
-    .should('exist')
-    .and('contain.text', 'Card was deleted');
+  cy.getDataCy('notification-message').should('exist').and('contain.text', 'Card was deleted');
+
 });

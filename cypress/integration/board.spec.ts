@@ -18,17 +18,11 @@ it('board actions', () => {
   cy.getDataCy('loading').should('not.exist');
   cy.getDataCy('home').click();
 
-  cy.step('star appears')
-  cy.getDataCy('board-item').trigger('mouseover');
-  cy.getDataCy('star').should('be.visible');
-  cy.getDataCy('board-item').trigger('mouseout');
-  cy.getDataCy('star').should('not.be.visible');
-
   cy.step('star board')
   cy.intercept('PATCH', '/api/boards/*').as('starBoard');
   cy.getDataCy('board-item').should('be.visible');
   cy.getDataCy('starred-boards').should('not.exist');
-  cy.getDataCy('board-item').realHover();
+  cy.getDataCy('board-item').trigger('mouseover');
   cy.getDataCy('star').click();
   cy.wait('@starBoard')
     .its('request.body.starred')
