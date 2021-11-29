@@ -5,10 +5,15 @@ beforeEach(() => {
     .addCardApi({ name: 'new card' });
 });
 
-it('card detail actions', () => {
+it('card detail actions', function() {
+
+  const boardId = this.board.id
+  const cardId = this.card.id
+  const card = this.card
+
   cy.intercept('PATCH', '/api/cards/*').as('updateCard');
   cy.intercept('DELETE', '/api/cards/*').as('deleteCard');
-  cy.visit(`/board/${Cypress.env('boards')[0].id}?card=${Cypress.env('cards')[0].id}`);
+  cy.visit(`/board/${boardId}?card=${cardId}`);
   
   cy.step('closing and opening card')
   cy.getDataCy('card-detail').should('be.visible');
@@ -22,7 +27,7 @@ it('card detail actions', () => {
 
   cy.step('card properties')
   cy.getDataCy('copy-properties').realClick();
-  cy.task('getClipboard').should('eq', JSON.stringify(Cypress.env('cards')[0], null, 2));
+  cy.task('getClipboard').should('eq', JSON.stringify(card, null, 2));
   cy.getDataCy('notification-message')
     .should('exist')
     .and('contain.text', 'Card info copied to clipboard');
@@ -66,7 +71,6 @@ it('card detail actions', () => {
     url: '/api/upload',
     times: 2
   }).as('imageUpload');
-  cy.intercept('PATCH', '/api/cards/*').as('updateCard');
   cy.getDataCy('upload-image').attachFile('cypressLogo.png', { subjectType: 'drag-n-drop' });
   cy.wait('@imageUpload').its('response.body').should('have.property', 'path').and('not.be.empty');
   cy.wait('@updateCard').its('response.body.image').should('not.be.empty');

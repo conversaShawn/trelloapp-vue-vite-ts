@@ -14,14 +14,17 @@ describe('Tools', () => {
   
   });
 
-  it('show tools', () => {
+  it('show tools', function() {
+
+    const boardId = this.board.id
+    const { accessToken } = this.user
 
     cy.intercept('DELETE', '/api/boards').as('boards')
     cy.intercept('DELETE', '/api/lists').as('lists')
     cy.intercept('DELETE', '/api/cards').as('cards')
     cy.intercept('DELETE', '/api/users').as('users')
 
-    cy.visit(`/board/${Cypress.env('boards')[0].id}`)
+    cy.visit(`/board/${boardId}`)
 
     cy.getDataCy('card').should('be.visible')
     cy.getDataCy('list').should('be.visible')
@@ -41,7 +44,7 @@ describe('Tools', () => {
         body, 
         failOnStatusCode: false, 
         headers: {
-          authorization: `Bearer ${Cypress.env('users')[0].accessToken}`
+          authorization: `Bearer ${accessToken}`
         },
         method: 'POST',
         url: '/api/login'
@@ -69,11 +72,14 @@ describe('Tools', () => {
     
   });
 
-  it('resets all', () => {
+  it('resets all', function() {
+
+    const boardId = this.board.id
+    const { accessToken } = this.user
 
     cy.intercept('POST', '/api/reset').as('reset')
 
-    cy.visit(`/board/${Cypress.env('boards')[0].id}`)
+    cy.visit(`/board/${boardId}`)
   
     cy.window().invoke('store').invoke('toggleTools')
   
@@ -94,7 +100,7 @@ describe('Tools', () => {
         body, 
         failOnStatusCode: false, 
         headers: {
-          authorization: `Bearer ${Cypress.env('users')[0].accessToken}`
+          authorization: `Bearer ${accessToken}`
         },
         method: 'POST',
         url: '/api/login'

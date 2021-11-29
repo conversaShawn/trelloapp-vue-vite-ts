@@ -3,11 +3,14 @@ beforeEach(() => {
   cy.addBoardApi('new board');
 });
 
-it('card actions', () => {
+it('card actions', function() {
+
+  const boardId = this.board.id
+
   cy.intercept('POST', '/api/cards').as('createCard');
   cy.addListApi({name: 'list 1'})
   cy.addListApi({name: 'list 2'})
-  cy.visit(`/board/${Cypress.env('boards')[0].id}`);
+  cy.visit(`/board/${boardId}`);
 
   cy.step('card create cancel')
   // esc key

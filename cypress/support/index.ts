@@ -17,15 +17,6 @@ Cypress.Commands.add('getDataCy', getDataCy);
 Cypress.Commands.add('signupApi', signupApi);
 Cypress.Commands.add('step', step);
 
-beforeEach(() => {
-
-  Cypress.env('boards', []);
-  Cypress.env('lists', []);
-  Cypress.env('cards', []);
-  Cypress.env('users', []);
-
-});
-
 declare global {
   interface Window {
     logCalls: number;

@@ -37,7 +37,7 @@ it('board actions', () => {
   cy.getDataCy('new-board-input').type('{enter}');
   cy.getDataCy('create-board').click();
   cy.getDataCy('cancel').click();
-  cy.location('href').should('eq', `${Cypress.config('baseUrl')}/`);
+  cy.location('pathname').should('eq', '/');
   cy.getDataCy('board-item').should('have.length', 1);
   cy.getDataCy('create-board').should('be.visible');
 
@@ -80,7 +80,7 @@ it('board actions', () => {
   cy.getDataCy('notification-message').should('be.visible');
   cy.tick(4000);
   cy.getDataCy('notification-message').should('not.exist');
-  cy.location('href').should('eq', `${Cypress.config('baseUrl')}/`);
+  cy.location('pathname').should('eq', '/');
   cy.getDataCy('board-item').should('have.length', 3);
   cy.getDataCy('new-board-input').should('be.visible');
 

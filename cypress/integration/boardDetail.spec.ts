@@ -6,9 +6,11 @@ beforeEach(() => {
   cy.addBoardApi(oldName);
 });
 
-it('board actions', () => {
+it('board actions', function() {
   
-  cy.visit(`/board/${Cypress.env('boards')[0].id}`);
+  const boardId = this.board.id;
+  
+  cy.visit(`/board/${boardId}`);
 
   cy.step('rename cancel')
   cy.getDataCy('board-title').should('have.value', oldName);
@@ -19,7 +21,6 @@ it('board actions', () => {
 
   cy.step('renames of a board')
   cy.intercept('PATCH', '/api/boards/*').as('boardChange');
-  cy.visit(`/board/${Cypress.env('boards')[0].id}`);
   cy.getDataCy('board-title')
     .clear()
     .type(`${newName}{enter}`);
