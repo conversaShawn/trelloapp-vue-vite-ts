@@ -1,83 +1,80 @@
-describe('lists', () => {
-  beforeEach(() => {
-    cy.request('POST', '/api/reset');
-    cy.addBoardApi('new board');
-  });
+beforeEach(() => {
+  cy.request('POST', '/api/reset');
+  cy.addBoardApi('new board');
+});
 
-  it('creates second lists', () => {
+it('list actions', () => {
 
-    const list1 = 'list1'
-    const list2 = 'list2'
+  const list1 = 'list1'
+  const list2 = 'list2'
 
-    cy.intercept({
-      method: 'POST', 
-      url:'/api/lists',
-      times: 1
-    }, { 
-      statusCode: 500
-    }).as('createList');
+  cy.intercept({
+    method: 'POST', 
+    url:'/api/lists',
+    times: 1
+  }, { 
+    statusCode: 500
+  }).as('createList');
 
-    cy.visit(`/board/${Cypress.env('boards')[0].id}`);
+  cy.visit(`/board/${Cypress.env('boards')[0].id}`);
 
-    cy.log('show error message')
-    cy.getDataCy('add-list-input').type('new list{enter}');
-    cy.getDataCy('notification-message').should('be.visible').and('contain.text', 'List was not created')
-    
-    cy.log('create first list')
-    cy.getDataCy('add-list-input').type(`${list1}{enter}`);
-    cy.getDataCy('list').should('have.length', 1);
+  cy.step('show error message')
+  cy.getDataCy('add-list-input').type('new list{enter}');
+  cy.getDataCy('notification-message').should('be.visible').and('contain.text', 'List was not created')
   
-    cy.log('does not accept empty list names')
-    cy.getDataCy('add-list-input').type('{enter}');
-    cy.getDataCy('list').should('have.length', 1);
-    cy.getDataCy('add-list-input').should('be.focused');
+  cy.step('create first list')
+  cy.getDataCy('add-list-input').type(`${list1}{enter}`);
+  cy.getDataCy('list').should('have.length', 1);
 
-    cy.log('cancels list creation')
-    cy.getDataCy('add-list-input').type(`${list1}{esc}`);
-    cy.getDataCy('list').should('have.length', 1);
-    cy.getDataCy('add-list-input').should('not.exist');
+  cy.step('does not accept empty list names')
+  cy.getDataCy('add-list-input').type('{enter}');
+  cy.getDataCy('list').should('have.length', 1);
+  cy.getDataCy('add-list-input').should('be.focused');
 
-    cy.log('cancel button')
-    cy.getDataCy('create-list').click();
-    cy.getDataCy('cancel').click();
-    cy.getDataCy('list').should('have.length', 1);
-    cy.getDataCy('add-list-input').should('not.exist');
+  cy.step('cancels list creation')
+  cy.getDataCy('add-list-input').type(`${list1}{esc}`);
+  cy.getDataCy('list').should('have.length', 1);
+  cy.getDataCy('add-list-input').should('not.exist');
 
-    cy.log('click away')
-    cy.getDataCy('create-list').click();
-    cy.getDataCy('add-list-input').click();
-    cy.getDataCy('board-detail').click();
+  cy.step('cancel button')
+  cy.getDataCy('create-list').click();
+  cy.getDataCy('cancel').click();
+  cy.getDataCy('list').should('have.length', 1);
+  cy.getDataCy('add-list-input').should('not.exist');
 
-    cy.log('create second list')
-    cy.getDataCy('create-list').click();
-    cy.getDataCy('add-list-input').should('be.focused').type(`${list2}{enter}`);
-    cy.contains('Add list').click();
-    cy.getDataCy('list').should('have.length', 2);
-    
-    cy.log('reorder lists')
-    cy.getDataCy('list-name').eq(0).as('list1').should('have.value', list1);
-    cy.getDataCy('list-name').eq(1).as('list2').should('have.value', list2);
-    cy.getDataCy('list').eq(0).drag('[data-cy=list-placeholder]:nth-child(2)', { force: true });
-    cy.get('@list2').should('have.value', list1);
-    cy.get('@list1').should('have.value', list2);
+  cy.step('click away')
+  cy.getDataCy('create-list').click();
+  cy.getDataCy('add-list-input').click();
+  cy.getDataCy('board-detail').click();
 
-    cy.log('delete list')
-    cy.getDataCy('list-options').eq(0).click();
-    cy.getDataCy('delete-list').click();
-    cy.getDataCy('list').should('have.length', 1);
+  cy.step('create second list')
+  cy.getDataCy('create-list').click();
+  cy.getDataCy('add-list-input').should('be.focused').type(`${list2}{enter}`);
+  cy.contains('Add list').click();
+  cy.getDataCy('list').should('have.length', 2);
+  
+  cy.step('reorder lists')
+  cy.getDataCy('list-name').eq(0).as('list1').should('have.value', list1);
+  cy.getDataCy('list-name').eq(1).as('list2').should('have.value', list2);
+  cy.getDataCy('list').eq(0).drag('[data-cy=list-placeholder]:nth-child(2)', { force: true });
+  cy.get('@list2').should('have.value', list1);
+  cy.get('@list1').should('have.value', list2);
 
-    cy.log('rename list')
-    cy.getDataCy('list-name').eq(0).focus().clear().type('renamed list{enter}');
-    cy.getDataCy('list-name').eq(0).should('have.value', 'renamed list');
+  cy.step('delete list')
+  cy.getDataCy('list-options').eq(0).click();
+  cy.getDataCy('delete-list').click();
+  cy.getDataCy('list').should('have.length', 1);
 
-    cy.log('open and close dropdown ')
-    cy.getDataCy('list-options').click();
-    cy.getDataCy('dropdown').should('be.visible');
-    cy.getDataCy('cancel').click();
-    cy.getDataCy('list-options').click();
-    cy.getDataCy('board-detail').click('bottomRight');
-    cy.getDataCy('dropdown').should('not.exist');
+  cy.step('rename list')
+  cy.getDataCy('list-name').eq(0).type('renamed list{enter}');
+  cy.getDataCy('list-name').eq(0).should('have.value', 'renamed list');
 
-  });
+  cy.step('open and close dropdown ')
+  cy.getDataCy('list-options').click();
+  cy.getDataCy('dropdown').should('be.visible');
+  cy.getDataCy('cancel').click();
+  cy.getDataCy('list-options').click();
+  cy.getDataCy('board-detail').click('bottomRight');
+  cy.getDataCy('dropdown').should('not.exist');
 
 });

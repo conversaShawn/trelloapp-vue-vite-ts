@@ -48,21 +48,18 @@ describe('Tools', () => {
       }).its('body').should('eq', 'Cannot find user')
 
     // deletes cards
-    cy.window().invoke('store').invoke('toggleTools')
     cy.contains('Cards').click()
     cy.getDataCy('card').should('not.exist')
 
     cy.wait('@cards')
     
     // deletes lists
-    cy.window().invoke('store').invoke('toggleTools')
     cy.contains('Lists').click()
     cy.getDataCy('list').should('not.exist')
 
     cy.wait('@lists')
 
     // deletes boards
-    cy.window().invoke('store').invoke('toggleTools')
     cy.contains('Boards').click()
     cy.location('pathname').should('eq', '/')
 
